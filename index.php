@@ -1,3 +1,129 @@
+<?php
+session_start();
+
+$isLoggedIn = isset($_SESSION['user_id']);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+    
+    if ($email == "demo@example.com" && $password == "password") {
+        $_SESSION['user_id'] = 1;
+        $_SESSION['user_name'] = "Demo User";
+        $isLoggedIn = true;
+        header("Location: ".$_SERVER['PHP_SELF']);
+        exit();
+    } else {
+        $loginError = "Email atau password salah";
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
+    $name = $_POST['name'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+    $terms = isset($_POST['terms']) ? true : false;
+    
+    if ($password != $confirm_password) {
+        $registerError = "Password tidak cocok";
+    } elseif (!$terms) {
+        $registerError = "Anda harus menyetujui syarat dan ketentuan";
+    } else {
+        $_SESSION['user_id'] = 2;
+        $_SESSION['user_name'] = $name;
+        $isLoggedIn = true;
+        header("Location: ".$_SERVER['PHP_SELF']);
+        exit();
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['forgot'])) {
+    $email = $_POST['email'] ?? '';
+    
+    $resetSuccess = "Email reset password telah dikirim ke $email";
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_review'])) {
+    $rating = $_POST['rating'] ?? 0;
+    $review_text = $_POST['review_text'] ?? '';
+    
+    $reviewSuccess = "Terima kasih atas ulasan Anda!";
+}
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit();
+}
+
+$popularVehicles = [
+    [
+        'image' => 'images/1 White.png',
+        'name' => 'Rush GR Sport',
+        'rating' => 4.5,
+        'reviews' => 196,
+        'price' => 950000
+    ],
+    [
+        'image' => 'images/faz-pink.png',
+        'name' => 'Yamaha Fazzio',
+        'rating' => 4.5,
+        'reviews' => 131,
+        'price' => 120000
+    ],
+    [
+        'image' => 'images/wulingpink.png',
+        'name' => 'Wuling Air EV',
+        'rating' => 4.5,
+        'reviews' => 326,
+        'price' => 800000
+    ]
+];
+
+$customerReviews = [
+    [
+        'rating' => 5,
+        'text' => 'Pelayanan sangat memuaskan, kendaraan bersih dan terawat. Proses pemesanan juga mudah dan cepat.',
+        'name' => 'Timora L.',
+        'occupation' => 'Mahasiswa'
+    ],
+    [
+        'rating' => 4,
+        'text' => 'Mobil yang disewakan dalam kondisi prima, harga sewa juga terjangkau. Recommended!',
+        'name' => 'Dalila N.',
+        'occupation' => 'Pengusaha'
+    ]
+];
+
+$teamMembers = [
+    [
+        'name' => 'Aqilah Azzahra Khoirunnisa',
+        'nim' => '2311103129',
+        'job' => 'Back End'
+    ],
+    [
+        'name' => 'Halimah Ummulizah',
+        'nim' => '2311103150',
+        'job' => 'Database & Testing'
+    ],
+    [
+        'name' => 'Made Putri Viona',
+        'nim' => '2311103109',
+        'job' => 'Front End'
+    ],
+    [
+        'name' => 'Timora Lestenia',
+        'nim' => '2311103040',
+        'job' => 'Server & Testing'
+    ]
+];
+
+function formatPrice($price) {
+    return 'Rp' . number_format($price, 0, ',', '.');
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -36,6 +162,22 @@
         .popup button {
             margin-top: 10px;
         }
+        
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
@@ -45,12 +187,17 @@
                 <h1>Quick<span>Rent</span></h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#">Beranda</a></li>
-                <li><a href="#kami.php">Tentang Kami</a></li>
-                <li><a href="#">Ulasan</a></li>
-                <li><a href="#">Kontak</a></li>
-                <li><a href="#login-section" class="auth-link">Masuk</a></li>
-                <li><a href="#register-section" class="auth-link">Daftar</a></li>
+                <li><a href="index.php">Beranda</a></li>
+                <li><a href="about.php">Tentang Kami</a></li>
+                <li><a href="#reviews">Ulasan</a></li>
+                <li><a href="#contact">Kontak</a></li>
+                <?php if ($isLoggedIn): ?>
+                    <li><a href="#">Halo, <?php echo htmlspecialchars($_SESSION['user_name']); ?></a></li>
+                    <li><a href="?logout=1">Keluar</a></li>
+                <?php else: ?>
+                    <li><a href="#login-section" class="auth-link">Masuk</a></li>
+                    <li><a href="#register-section" class="auth-link">Daftar</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>
@@ -65,11 +212,9 @@
                     <button class="tab-button" onclick="showFilter('motor')">🛵 Rental Motor</button>
                 </div>
                 <div id="filter-mobil" class="filter-content active">
-                    <!-- Isi filter untuk Rental Mobil -->
                 </div>
                 
                 <div id="filter-motor" class="filter-content">
-                    <!-- Isi filter untuk Rental Motor -->
                 </div>
                 <div class="filter-options">
                     <select><option>🚗 Semua Brand</option></select>
@@ -91,121 +236,81 @@
             pilihan kendaraan terbaru dengan kondisi prima, yang selalu kami jaga melalui perawatan berkala. Baik Anda membutuhkan kendaraan 
             untuk perjalanan wisata, urusan bisnis, atau sekadar mobilitas sehari-hari, QuickRent hadir dengan solusi yang tepat.</p>
     </section>
-
+    
     <section id="search" class="search-section">
         <div class="section-title">
             <h2>Kendaraan Populer 🔥</h2>
         </div>
         <center>
         <div class="team-buttons">
-            <button onclick="showPopup('popup1')">Lihat Identitas Pembuat 1</button>
-            <button onclick="showPopup('popup2')">Lihat Identitas Pembuat 2</button>
-            <button onclick="showPopup('popup3')">Lihat Identitas Pembuat 3</button>
-            <button onclick="showPopup('popup4')">Lihat Identitas Pembuat 4</button>
+            <?php foreach ($teamMembers as $index => $member): ?>
+                <button onclick="showPopup('popup<?php echo $index + 1; ?>')">Lihat Identitas Pembuat <?php echo $index + 1; ?></button>
+            <?php endforeach; ?>
         </div>
 
-        <!-- Popup 1 -->
-        <div id="popup1" class="popup">
-            <p><strong>Nama:</strong> Aqilah Azzahra Khoirunnisa</p>
-            <p><strong>NIM:</strong> 2311103129</p>
-            <p><strong>Jobs:</strong> Back End</p>
-            <button onclick="closePopup('popup1')">Tutup</button>
-        </div>
-        <!-- Popup 2 -->
-        <div id="popup2" class="popup">
-            <p><strong>Nama:</strong> Halimah Ummulizah</p>
-            <p><strong>NIM:</strong> 2311103150</p>
-            <p><strong>Jobs:</strong> Database & Testing</p>
-            <button onclick="closePopup('popup2')">Tutup</button>
-        </div>
-        <!-- Popup 3 -->
-        <div id="popup3" class="popup">
-            <p><strong>Nama:</strong> Made Putri Viona</p>
-            <p><strong>NIM:</strong> 2311103109</p>
-            <p><strong>Jobs:</strong> Front End</p>
-            <button onclick="closePopup('popup3')">Tutup</button>
-        </div>
-        <!-- Popup 4 -->
-        <div id="popup4" class="popup">
-            <p><strong>Nama:</strong> Timora Lestenia</p>
-            <p><strong>NIM:</strong> 2311103040</p>
-            <p><strong>Jobs:</strong> Server & Testing</p>
-            <button onclick="closePopup('popup4')">Tutup</button>
+        <?php foreach ($teamMembers as $index => $member): ?>
+            <div id="popup<?php echo $index + 1; ?>" class="popup">
+                <p><strong>Nama:</strong> <?php echo htmlspecialchars($member['name']); ?></p>
+                <p><strong>NIM:</strong> <?php echo htmlspecialchars($member['nim']); ?></p>
+                <p><strong>Jobs:</strong> <?php echo htmlspecialchars($member['job']); ?></p>
+                <button onclick="closePopup('popup<?php echo $index + 1; ?>')">Tutup</button>
+            </div>
+        <?php endforeach; ?>
+        </center>
+        
+        <div class="vehicle-grid" id="vehicle-list">
+            <?php foreach ($popularVehicles as $vehicle): ?>
+                <div class="vehicle-card">
+                    <img src="<?php echo htmlspecialchars($vehicle['image']); ?>" alt="<?php echo htmlspecialchars($vehicle['name']); ?>">
+                    <div class="vehicle-info">
+                        <div class="rating">
+                            <?php
+                            $fullStars = floor($vehicle['rating']);
+                            $halfStar = $vehicle['rating'] - $fullStars >= 0.5;
+                            
+                            for ($i = 1; $i <= 5; $i++) {
+                                if ($i <= $fullStars) {
+                                    echo '<span class="star filled">★</span>';
+                                } elseif ($i == $fullStars + 1 && $halfStar) {
+                                    echo '<span class="star half-filled">★</span>';
+                                } else {
+                                    echo '<span class="star">★</span>';
+                                }
+                            }
+                            ?>
+                            <span class="review-count">(<?php echo $vehicle['reviews']; ?>)</span>
+                        </div>
+                        <h3><?php echo htmlspecialchars($vehicle['name']); ?></h3>
+                        <hr>
+                        <p class="price"><?php echo formatPrice($vehicle['price']); ?> <span class="per-day">/Per Hari</span></p>
+                        <a href="booking.php?vehicle=<?php echo urlencode($vehicle['name']); ?>" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </section>
-    </center>
-    
-    <div class="vehicle-grid" id="vehicle-list">
-        <div class="vehicle-card">
-            <img src="images/1 White.png" alt="Rush GR Sport">
-            <div class="vehicle-info">
-                <div class="rating">
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star half-filled">★</span>
-                    <span class="review-count">(196)</span>
-                </div>
-                <h3>Rush GR Sport</h3>
-                <hr>
-                <p class="price">Rp950.000 <span class="per-day">/Per Hari</span></p>
-                <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
-            </div>
-        </div>
-        <div class="vehicle-card">
-            <img src="images/faz-pink.png" alt="Yamaha Fazzio">
-            <div class="vehicle-info">
-                <div class="rating">
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star half-filled">★</span>
-                    <span class="review-count">(131)</span>
-                </div>
-                <h3>Yamaha Fazzio</h3>
-                <hr>
-                <p class="price">Rp120.000 <span class="per-day">/Per Hari</span></p>
-                <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
-            </div>
-        </div>
-        <div class="vehicle-card">
-            <img src="images/wulingpink.png" alt="Wuling Air EV">
-            <div class="vehicle-info">
-                <div class="rating">
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star filled">★</span>
-                    <span class="star half-filled">★</span>
-                    <span class="review-count">(326)</span>
-                </div>
-                <h3>Wuling Air EV</h3>
-                <hr>
-                <p class="price">Rp800.000 <span class="per-day">/Per Hari</span></p>
-                <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
-            </div>
-        </div>
-    </div>
         
     <section id="reviews" class="reviews-section">
         <div class="section-title">
             <h2>Testimoni Pelanggan Kami💖</h2>
         </div>
         <div class="reviews-container">
-            <div class="review-card">
-                <div class="rating">★★★★★</div>
-                <p class="review-text">Pelayanan sangat memuaskan, kendaraan bersih dan terawat. Proses pemesanan juga mudah dan cepat.</p>
-                <p class="reviewer">Timora L. <span>- Mahasiswa</span></p>
-            </div>
-            <div class="review-card">
-                <div class="rating">★★★★☆</div>
-                <p class="review-text">Mobil yang disewakan dalam kondisi prima, harga sewa juga terjangkau. Recommended!</p>
-                <p class="reviewer">Dalila N. <span>- Pengusaha</span></p>
-            </div>
+            <?php foreach ($customerReviews as $review): ?>
+                <div class="review-card">
+                    <div class="rating">
+                        <?php echo str_repeat('★', $review['rating']) . str_repeat('☆', 5 - $review['rating']); ?>
+                    </div>
+                    <p class="review-text"><?php echo htmlspecialchars($review['text']); ?></p>
+                    <p class="reviewer"><?php echo htmlspecialchars($review['name']); ?> <span>- <?php echo htmlspecialchars($review['occupation']); ?></span></p>
+                </div>
+            <?php endforeach; ?>
         </div>
-        <form class="review-form" method="POST" action="submit_review.php">
+        
+        <?php if (isset($reviewSuccess)): ?>
+            <div class="alert alert-success"><?php echo $reviewSuccess; ?></div>
+        <?php endif; ?>
+        
+        <form class="review-form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>#reviews">
             <h3>Berikan Ulasan Anda</h3>
             <div class="rating-input">
                 <input type="radio" name="rating" value="5" id="star5"><label for="star5">★</label>
@@ -214,8 +319,8 @@
                 <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
                 <input type="radio" name="rating" value="1" id="star1"><label for="star1">★</label>
             </div>
-            <textarea name="review" placeholder="Tulis ulasan Anda di sini" required></textarea>
-            <button type="submit" class="form-submit">Kirim Ulasan</button>
+            <textarea name="review_text" placeholder="Tulis ulasan Anda di sini"></textarea>
+            <button type="submit" name="submit_review" class="form-submit">Kirim Ulasan</button>
         </form>
     </section>
 
@@ -224,7 +329,10 @@
             <div class="auth-content">
                 <a href="#" class="close-button">&times;</a>
                 <h2>Masuk</h2>
-                <form class="auth-form" action="login.php" method="POST">
+                <?php if (isset($loginError)): ?>
+                    <div class="alert alert-danger"><?php echo $loginError; ?></div>
+                <?php endif; ?>
+                <form class="auth-form" action="<?php echo $_SERVER['PHP_SELF']; ?>#login-section" method="POST">
                     <div class="form-group">
                         <label for="login-email">Email</label>
                         <input type="email" id="login-email" name="email" required>
@@ -237,7 +345,7 @@
                         <input type="checkbox" id="remember" name="remember">
                         <label for="remember">Ingat Saya</label>
                     </div>
-                    <button type="submit" class="auth-button">Masuk</button>
+                    <button type="submit" name="login" class="auth-button">Masuk</button>
                     <p class="forgot-password"><a href="#forgot-section">Lupa password?</a></p>
                     <p class="switch-form">Belum punya akun? <a href="#register-section">Daftar disini</a></p>
                 </form>
@@ -250,7 +358,10 @@
             <div class="auth-content">
                 <a href="#" class="close-button">&times;</a>
                 <h2>Daftar</h2>
-                <form class="auth-form" action="register.php" method="POST">
+                <?php if (isset($registerError)): ?>
+                    <div class="alert alert-danger"><?php echo $registerError; ?></div>
+                <?php endif; ?>
+                <form class="auth-form" action="<?php echo $_SERVER['PHP_SELF']; ?>#register-section" method="POST">
                     <div class="form-group">
                         <label for="register-name">Nama Lengkap</label>
                         <input type="text" id="register-name" name="name" required>
@@ -275,7 +386,7 @@
                         <input type="checkbox" id="terms" name="terms" required>
                         <label for="terms">Saya menyetujui <a href="#">Syarat dan Ketentuan</a></label>
                     </div>
-                    <button type="submit" class="auth-button">Daftar</button>
+                    <button type="submit" name="register" class="auth-button">Daftar</button>
                     <p class="switch-form">Sudah punya akun? <a href="#login-section">Masuk disini</a></p>
                 </form>
             </div>
@@ -287,12 +398,15 @@
             <div class="auth-content">
                 <a href="#" class="close-button">&times;</a>
                 <h2>Lupa Password</h2>
-                <form class="auth-form" action="reset_password.php" method="POST">
+                <?php if (isset($resetSuccess)): ?>
+                    <div class="alert alert-success"><?php echo $resetSuccess; ?></div>
+                <?php endif; ?>
+                <form class="auth-form" action="<?php echo $_SERVER['PHP_SELF']; ?>#forgot-section" method="POST">
                     <div class="form-group">
                         <label for="forgot-email">Email</label>
                         <input type="email" id="forgot-email" name="email" required>
                     </div>
-                    <button type="submit" class="auth-button">Reset Password</button>
+                    <button type="submit" name="forgot" class="auth-button">Reset Password</button>
                     <p class="switch-form"><a href="#login-section">Kembali ke halaman login</a></p>
                 </form>
             </div>
@@ -329,7 +443,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 QuickRent. All rights reserved.</p>
+            <p>&copy; <?php echo date('Y'); ?> QuickRent. All rights reserved.</p>
         </div>
     </footer>
 
@@ -342,7 +456,6 @@
         }
         
         function showFilter(type) {
-            // Existing function for filter tabs
             const contents = document.getElementsByClassName('filter-content');
             for (let i = 0; i < contents.length; i++) {
                 contents[i].classList.remove('active');
