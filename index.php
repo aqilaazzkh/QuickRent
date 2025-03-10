@@ -1,3 +1,8 @@
+<?php
+// QuickRent - Sistem Rental
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
