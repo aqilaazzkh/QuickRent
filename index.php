@@ -1,8 +1,3 @@
-<?php
-// QuickRent - Sistem Rental
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -51,7 +46,7 @@ session_start();
             </div>
             <ul class="nav-links">
                 <li><a href="#">Beranda</a></li>
-                <li><a href="#kami.php" >Tentang Kami</a></li>
+                <li><a href="#kami.php">Tentang Kami</a></li>
                 <li><a href="#">Ulasan</a></li>
                 <li><a href="#">Kontak</a></li>
                 <li><a href="#login-section" class="auth-link">Masuk</a></li>
@@ -87,7 +82,6 @@ session_start();
         </div>
     </section>
 
-  
     <section class="about-section">
         <h2>Rental Mobil dan Motor Terbaik di Purwokerto - QuickRent</h2>
         <p>Selamat datang di QuickRent, aplikasi penyewaan mobil dan motor terdepan di Purwokerto yang dirancang untuk memberikan kemudahan dan 
@@ -96,7 +90,8 @@ session_start();
         <p>Kami memahami bahwa setiap perjalanan memiliki kebutuhan yang berbeda. Oleh karena itu, QuickRent menawarkan beragam 
             pilihan kendaraan terbaru dengan kondisi prima, yang selalu kami jaga melalui perawatan berkala. Baik Anda membutuhkan kendaraan 
             untuk perjalanan wisata, urusan bisnis, atau sekadar mobilitas sehari-hari, QuickRent hadir dengan solusi yang tepat.</p>
-        
+    </section>
+
     <section id="search" class="search-section">
         <div class="section-title">
             <h2>Kendaraan Populer 🔥</h2>
@@ -140,60 +135,59 @@ session_start();
     </section>
     </center>
     
-        <div class="vehicle-grid" id="vehicle-list">
-            <div class="vehicle-card">
-                <img src="images/1 White.png" alt="Rush GR Sport">
-                <div class="vehicle-info">
-                    <div class="rating">
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star half-filled">★</span>
-                        <span class="review-count">(196)</span>
-                    </div>
-                    <h3>Rush GR Sport</h3>
-                    <hr>
-                    <p class="price">Rp950.000 <span class="per-day">/Per Hari</span></p>
-                    <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
+    <div class="vehicle-grid" id="vehicle-list">
+        <div class="vehicle-card">
+            <img src="images/1 White.png" alt="Rush GR Sport">
+            <div class="vehicle-info">
+                <div class="rating">
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star half-filled">★</span>
+                    <span class="review-count">(196)</span>
                 </div>
-            </div>
-            <div class="vehicle-card">
-                <img src="images/faz-pink.png" alt="Yamaha Fazzio">
-                <div class="vehicle-info">
-                    <div class="rating">
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star half-filled">★</span>
-                        <span class="review-count">(131)</span>
-                    </div>
-                    <h3>Yamaha Fazzio</h3>
-                    <hr>
-                    <p class="price">Rp120.000 <span class="per-day">/Per Hari</span></p>
-                    <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
-                </div>
-            </div>
-            <div class="vehicle-card">
-                <img src="images/wulingpink.png" alt="Wuling Air EV">
-                <div class="vehicle-info">
-                    <div class="rating">
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star half-filled">★</span>
-                        <span class="review-count">(326)</span>
-                    </div>
-                    <h3>Wuling Air EV</h3>
-                    <hr>
-                    <p class="price">Rp800.000 <span class="per-day">/Per Hari</span></p>
-                    <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
-                </div>
+                <h3>Rush GR Sport</h3>
+                <hr>
+                <p class="price">Rp950.000 <span class="per-day">/Per Hari</span></p>
+                <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
             </div>
         </div>
-    </section>
+        <div class="vehicle-card">
+            <img src="images/faz-pink.png" alt="Yamaha Fazzio">
+            <div class="vehicle-info">
+                <div class="rating">
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star half-filled">★</span>
+                    <span class="review-count">(131)</span>
+                </div>
+                <h3>Yamaha Fazzio</h3>
+                <hr>
+                <p class="price">Rp120.000 <span class="per-day">/Per Hari</span></p>
+                <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
+            </div>
+        </div>
+        <div class="vehicle-card">
+            <img src="images/wulingpink.png" alt="Wuling Air EV">
+            <div class="vehicle-info">
+                <div class="rating">
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star half-filled">★</span>
+                    <span class="review-count">(326)</span>
+                </div>
+                <h3>Wuling Air EV</h3>
+                <hr>
+                <p class="price">Rp800.000 <span class="per-day">/Per Hari</span></p>
+                <a href="#booking" class="sewa-sekarang">Sewa Sekarang <span class="arrow">›</span></a>
+            </div>
+        </div>
+    </div>
         
     <section id="reviews" class="reviews-section">
         <div class="section-title">
@@ -211,7 +205,7 @@ session_start();
                 <p class="reviewer">Dalila N. <span>- Pengusaha</span></p>
             </div>
         </div>
-        <form class="review-form">
+        <form class="review-form" method="POST" action="submit_review.php">
             <h3>Berikan Ulasan Anda</h3>
             <div class="rating-input">
                 <input type="radio" name="rating" value="5" id="star5"><label for="star5">★</label>
@@ -220,7 +214,7 @@ session_start();
                 <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
                 <input type="radio" name="rating" value="1" id="star1"><label for="star1">★</label>
             </div>
-            <textarea placeholder="Tulis ulasan Anda di sini"></textarea>
+            <textarea name="review" placeholder="Tulis ulasan Anda di sini" required></textarea>
             <button type="submit" class="form-submit">Kirim Ulasan</button>
         </form>
     </section>
@@ -230,7 +224,7 @@ session_start();
             <div class="auth-content">
                 <a href="#" class="close-button">&times;</a>
                 <h2>Masuk</h2>
-                <form class="auth-form" action="popup.php" method="POST">
+                <form class="auth-form" action="login.php" method="POST">
                     <div class="form-group">
                         <label for="login-email">Email</label>
                         <input type="email" id="login-email" name="email" required>
@@ -256,7 +250,7 @@ session_start();
             <div class="auth-content">
                 <a href="#" class="close-button">&times;</a>
                 <h2>Daftar</h2>
-                <form class="auth-form" action="#" method="POST">
+                <form class="auth-form" action="register.php" method="POST">
                     <div class="form-group">
                         <label for="register-name">Nama Lengkap</label>
                         <input type="text" id="register-name" name="name" required>
@@ -289,21 +283,21 @@ session_start();
     </section>
 
     <section id="forgot-section" class="auth-section">
-    <div class="auth-container">
-        <div class="auth-content">
-            <a href="#" class="close-button">&times;</a>
-            <h2>Lupa Password</h2>
-            <form class="auth-form" action="#" method="POST">
-                <div class="form-group">
-                    <label for="forgot-email">Email</label>
-                    <input type="email" id="forgot-email" name="email" required>
-                </div>
-                <button type="submit" class="auth-button">Reset Password</button>
-                <p class="switch-form"><a href="#login-section">Kembali ke halaman login</a></p>
-            </form>
+        <div class="auth-container">
+            <div class="auth-content">
+                <a href="#" class="close-button">&times;</a>
+                <h2>Lupa Password</h2>
+                <form class="auth-form" action="reset_password.php" method="POST">
+                    <div class="form-group">
+                        <label for="forgot-email">Email</label>
+                        <input type="email" id="forgot-email" name="email" required>
+                    </div>
+                    <button type="submit" class="auth-button">Reset Password</button>
+                    <p class="switch-form"><a href="#login-section">Kembali ke halaman login</a></p>
+                </form>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <footer>
         <div class="footer-container">
