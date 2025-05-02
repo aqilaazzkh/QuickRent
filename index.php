@@ -1,3 +1,20 @@
+<?php
+// Fungsi untuk menampilkan navbar
+function displayNavbar() {
+    echo '<nav class="navbar">';
+    echo '    <div class="logo">';
+    echo '        <h1>QuickRent</h1>';
+    echo '    </div>';
+    echo '    <ul class="nav-links">';
+    echo '        <li><a href="index.php">Beranda</a></li>';
+    echo '        <li><a href="kendaraan.php">Kendaraan</a></li>';
+    echo '        <li><a href="tentang.php">Tentang</a></li>';
+    echo '        <li><a href="kontak.php">Kontak</a></li>';
+    echo '    </ul>';
+    echo '</nav>';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
